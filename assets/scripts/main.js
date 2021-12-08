@@ -1,27 +1,27 @@
+// Data and configs
+let steps = ["Step 1", "Step 2", "Step 3", "Step 4"];
+let minStep = 1;
+let maxStep = steps.length;
+let activeStep = 1;
+
+// Get elements of DOM
 const previous = document.getElementById("previous");
 const next = document.getElementById("next");
+const progressbar = document.querySelector(".progressbar");
 
-activeStep = 1;
-maxStep = 4;
-minStep = 1;
-
-checkButtonState();
-
-next.addEventListener("click", onNextClick);
+// Add event listener to buttons
 previous.addEventListener("click", onPreviousClick);
+next.addEventListener("click", onNextClick);
+
+// Functions
+function onPreviousClick() {
+  activeStep = activeStep - 1;
+  render();
+}
 
 function onNextClick() {
   activeStep = activeStep + 1;
-  document.querySelector(`[data-step="${activeStep}"]`).classList.add("active");
-  checkButtonState();
-}
-
-function onPreviousClick() {
-  document
-    .querySelector(`[data-step="${activeStep}"]`)
-    .classList.remove("active");
-  activeStep = activeStep - 1;
-  checkButtonState();
+  render();
 }
 
 function checkButtonState() {
@@ -36,3 +36,27 @@ function checkButtonState() {
     previous.disabled = true;
   }
 }
+
+function render() {
+  progressbar.innerHTML = "";
+
+  steps.map((step) => {
+    let pos = steps.indexOf(step) + 1;
+    let isActive = activeStep === pos ? "active" : "inactive";
+    let isComplete = activeStep > pos ? "complete" : "incomplete";
+
+    let stepElement = `
+      <li 
+        data-step=${pos} 
+        class="step ${isActive} ${isComplete}"
+      >${step}</li>
+    `;
+
+    progressbar.innerHTML += stepElement;
+  });
+
+  checkButtonState();
+}
+
+// Render the progressbar
+render();
